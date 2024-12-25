@@ -1,0 +1,30 @@
+# Ignore artifacts:
+build
+coverage
+node_modules
+
+# Ignore node_modules
+node_modules/
+
+# Ignore temporary files and system files
+.DS_Store
+Thumbs.db
+*.swp
+
+# Ignore TypeScript build artifacts
+*.js
+*.js.map
+*.d.ts
+
+# Ignore environment files
+.env
+.env.local
+.env.*.local
+
+# Ignore IDE and editor settings
+.vscode/
+.idea/
+*.code-workspace
+
+# Ignore OS-generated files
+*.lock.*

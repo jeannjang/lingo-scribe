@@ -1,0 +1,15 @@
+{
+    "action": {
+        "default_popup": "popup.html"
+    },
+    "content_scripts": [
+        {
+            "js": ["content.js"],
+            "matches": ["*://*.netflix.com/watch/*"]
+        }
+    ],
+    "description": "This extension will help you to dictate subtitle of videos from Netflix",
+    "manifest_version": 3,
+    "name": "Subtitle Dictation App",
+    "version": "1.0"
+}
