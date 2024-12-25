@@ -2,9 +2,12 @@
     "action": {
         "default_popup": "popup.html"
     },
+    "background": {
+        "service_worker": "SERVICE_WORKER_FILENAME"
+    },
     "content_scripts": [
         {
-            "js": ["content.js"],
+            "js": ["CONTENT_SCRIPT_FILENAME"],
             "matches": ["*://*.netflix.com/watch/*"]
         }
     ],
