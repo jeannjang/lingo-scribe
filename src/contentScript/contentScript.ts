@@ -17,5 +17,18 @@ window.onmessage = (event) => {
             console.log('Received message from pageScript ', event.data);
             return;
         }
+        case 'SUBTITLE/RESPONSE': {
+            // TODO: This list will be stored in a Redux store later
+            console.log(
+                'Received message from pageScript ',
+                event.data.payload
+            );
+            return;
+        }
+        case 'SUBTITLE/FETCH_ERROR': {
+            // TODO: Will let the user know that the subtitle fetch failed
+            console.log('Received message from pageScript ', event.data);
+            return;
+        }
     }
 };

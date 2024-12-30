@@ -4,6 +4,7 @@ export const messageType = {
     availableBcp47List: 'SUBTITLE/AVAILABLE_BCP47_LIST',
     subtitleRequest: 'SUBTITLE/REQUEST',
     subtitleResponse: 'SUBTITLE/RESPONSE',
+    subtitleFetchError: 'SUBTITLE/FETCH_ERROR',
 } as const;
 
 type MessageBase = {
@@ -15,11 +16,21 @@ export interface AvailableBcp47ListMessage extends MessageBase {
     payload: string[];
 }
 
-export interface SubtitleResponseMessage {
-    type: 'SUBTITLE_RESPONSE';
-    payload: SubtitleResponsePayload;
+export interface SubtitleRequestMessage extends MessageBase {
+    type: 'SUBTITLE/REQUEST';
+    payload: {
+        bcp47: string;
+    };
 }
 
-interface SubtitleResponsePayload {
-    subtitles: Subtitle[];
+export interface SubtitleResponseMessage extends MessageBase {
+    type: 'SUBTITLE/RESPONSE';
+    payload: Subtitle[];
+}
+
+export interface SubtitleFetchError extends MessageBase {
+    type: 'SUBTITLE/FETCH_ERROR';
+    payload: {
+        message: string;
+    };
 }
