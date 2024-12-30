@@ -3,12 +3,19 @@
         "default_popup": "popup.html"
     },
     "background": {
-        "service_worker": "SERVICE_WORKER_FILENAME"
+        "service_worker": "serviceWorker.js"
     },
     "content_scripts": [
         {
-            "js": ["CONTENT_SCRIPT_FILENAME"],
-            "matches": ["*://*.netflix.com/watch/*"]
+            "js": ["contentScript.js"],
+            "matches": ["*://*.netflix.com/watch/*"],
+            "run_at": "document_start"
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": ["pageScript.js"],
+            "matches": ["https://*.netflix.com/*"]
         }
     ],
     "description": "This extension will help you to dictate subtitle of videos from Netflix",
