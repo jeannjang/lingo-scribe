@@ -6,6 +6,9 @@ module.exports = (env, argv) => {
 
   return {
     devtool: isProduction ? 'source-map' : 'inline-source-map',
+    resolve: {
+      extensions: ['.tsx', '.ts', '.jsx', '.js'],
+    },
     entry: {
       serviceWorker: './src/serviceWorker/serviceWorker.ts',
       contentScript: './src/contentScript/contentScript.ts',

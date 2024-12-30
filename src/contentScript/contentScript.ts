@@ -9,3 +9,13 @@ window.addEventListener('load', () => {
         document.head.appendChild(scriptElement);
     });
 });
+
+window.onmessage = (event) => {
+    switch (event.data.type) {
+        case 'SUBTITLE/AVAILABLE_BCP47_LIST': {
+            // TODO: This list will be stored in a Redux store later
+            console.log('Received message from pageScript ', event.data);
+            return;
+        }
+    }
+};
