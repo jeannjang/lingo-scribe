@@ -2,6 +2,7 @@ import { waitUntilAsync } from '../helpers';
 import {
     AvailableBcp47ListMessage,
     messageType,
+    SubtitleFetchError,
     SubtitleRequestMessage,
     SubtitleResponseMessage,
 } from '../types/messages';
@@ -39,12 +40,94 @@ const getTimedTextTrackListAsync = async (videoPlayer: NetflixVideoPlayer) => {
     return videoPlayer.getTimedTextTrackList();
 };
 
+const sendSubtitleFetchErrorMessage = (message: string) => {
+    window.postMessage(
+        {
+            type: 'SUBTITLE/FETCH_ERROR',
+            payload: {
+                message,
+            },
+        } satisfies SubtitleFetchError,
+        '*'
+    );
+};
+
+const addSubtitleRequestMessageListener = (
+    windowObject: Window,
+    netflixVideoPlayer: NetflixVideoPlayer
+) => {
+    windowObject.onmessage = async (event) => {
+        const eventType = event.data.type;
+        if (eventType === messageType.subtitleRequest) {
+            const {
+                payload: { bcp47 },
+            } = event.data as SubtitleRequestMessage;
+
+            // Check if subtitleDownloadUrls is already stored.
+            // If not, set the target timedTextTrack to netflix video player and wait for the download URLs to be stored.
+            // spyOnJsonParse will intercept calls and store the target subtitleDownloadUrls.
+            if (!getSubtitleDownloadUrls()[bcp47]) {
+                const selectedTimedTextTrack = netflixVideoPlayer
+                    .getTimedTextTrackList()
+                    .find((textTrack: any) => textTrack.bcp47 === bcp47);
+
+                if (!selectedTimedTextTrack) {
+                    sendSubtitleFetchErrorMessage(
+                        `Subtitle not found for ${bcp47} in the timed track list`
+                    );
+                    return;
+                }
+
+                netflixVideoPlayer.setTimedTextTrack(selectedTimedTextTrack);
+
+                try {
+                    await waitUntilAsync(() => {
+                        return getSubtitleDownloadUrls()[bcp47] !== undefined;
+                    });
+
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                } catch (_) {
+                    sendSubtitleFetchErrorMessage(
+                        `Timeout to intercept subtitle download url for ${bcp47}`
+                    );
+                    return;
+                }
+            }
+
+            const urls = getSubtitleDownloadUrls()[bcp47];
+
+            // Fetch the first subtitle download url
+            const response = await fetch(urls[0]);
+
+            if (!response.ok) {
+                sendSubtitleFetchErrorMessage(
+                    `Failed to fetch subtitle for ${bcp47}`
+                );
+                return;
+            }
+
+            const xmlSubtitleString = await response.text();
+            const parsedSubtitles = parseXmlToSubtitles(xmlSubtitleString);
+
+            window.postMessage(
+                {
+                    type: 'SUBTITLE/RESPONSE',
+                    payload: parsedSubtitles,
+                } satisfies SubtitleResponseMessage,
+                '*'
+            );
+        }
+    };
+};
+
 const main = async () => {
     spyOnJsonParse(window);
 
     const netflixVideoPlayer = await getNetflixVideoPlayerAsync(window);
     const timedTextTrackList =
         await getTimedTextTrackListAsync(netflixVideoPlayer);
+
+    addSubtitleRequestMessageListener(window, netflixVideoPlayer);
 
     const bcp47List = timedTextTrackList
         .filter((textTrack: any) => textTrack.bcp47)
