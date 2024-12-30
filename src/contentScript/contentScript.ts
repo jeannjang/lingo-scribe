@@ -1,29 +1,11 @@
-import { Subtitle } from '../types/subtitle';
-import {
-    SubtitleRequestMessage,
-    SubtitleResponseMessage,
-} from '../types/messages';
-
-const requestSubtitles = async (): Promise<Subtitle[]> => {
-    const response = await chrome.runtime.sendMessage<
-        SubtitleRequestMessage,
-        SubtitleResponseMessage
-    >({
-        type: 'SUBTITLE_REQUEST',
+// As content script is running in a different context,
+// we need to inject the pageScript into the DOM so that it can access the page's context.
+window.addEventListener('load', () => {
+    const scriptsToInject = ['pageScript.js'];
+    scriptsToInject.forEach((scriptName) => {
+        const scriptElement = document.createElement('script');
+        scriptElement.setAttribute('type', 'text/javascript');
+        scriptElement.setAttribute('src', chrome.runtime.getURL(scriptName));
+        document.head.appendChild(scriptElement);
     });
-
-    console.log('Received subtitle data:', response);
-
-    return response.payload.subtitles;
-};
-
-const main = async () => {
-    console.log('Content Script loaded');
-    const subtitles = await requestSubtitles();
-    console.log(subtitles);
-    // Render subtitles on the page
-};
-
-main().catch((error) => {
-    console.log(error);
 });
