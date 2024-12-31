@@ -107,12 +107,15 @@ const addSubtitleRequestMessageListener = (
             }
 
             const xmlSubtitleString = await response.text();
-            const parsedSubtitles = parseXmlToSubtitles(xmlSubtitleString);
+            const parsedSubtitleLines = parseXmlToSubtitles(xmlSubtitleString);
 
             window.postMessage(
                 {
                     type: 'SUBTITLE/RESPONSE',
-                    payload: parsedSubtitles,
+                    payload: {
+                        bcp47,
+                        subtitleLines: parsedSubtitleLines,
+                    },
                 } satisfies SubtitleResponseMessage,
                 '*'
             );

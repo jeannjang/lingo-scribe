@@ -1,6 +1,6 @@
-import { Subtitle } from '../types/subtitle';
+import { SubtitleLine } from '../types/subtitle';
 
-const parseXmlToSubtitles = (xmlSubtitleString: string): Subtitle[] => {
+const parseXmlToSubtitles = (xmlSubtitleString: string): SubtitleLine[] => {
     const domParser = new DOMParser();
     const parsedDocument = domParser.parseFromString(
         xmlSubtitleString,
@@ -21,11 +21,11 @@ const parseXmlToSubtitles = (xmlSubtitleString: string): Subtitle[] => {
         )
         .map((element) => {
             return {
-                startTime:
+                beginMs:
                     parseInt(
                         <string>element.getAttribute('begin')?.replace('t', '')
                     ) * millisecondsPerTick,
-                endTime:
+                endMs:
                     parseInt(
                         <string>element.getAttribute('end')?.replace('t', '')
                     ) * millisecondsPerTick,

@@ -25,7 +25,7 @@ export interface SubtitleRequestMessage extends MessageBase {
 
 export interface SubtitleResponseMessage extends MessageBase {
     type: 'SUBTITLE/RESPONSE';
-    payload: Subtitle[];
+    payload: Subtitle;
 }
 
 export interface SubtitleFetchError extends MessageBase {
