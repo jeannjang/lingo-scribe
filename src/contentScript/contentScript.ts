@@ -1,3 +1,5 @@
+import './component/index.tsx';
+
 // As content script is running in a different context,
 // we need to inject the pageScript into the DOM so that it can access the page's context.
 window.addEventListener('load', () => {
