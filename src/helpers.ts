@@ -25,3 +25,7 @@ export const waitUntilAsync = async (
         }
     }
 };
+
+export const assertExhaustive = (value: never, message?: string): never => {
+    throw new Error(message ? message : `Unhandled value: ${value}`);
+};
