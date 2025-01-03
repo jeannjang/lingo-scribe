@@ -16,7 +16,7 @@ interface LingoScribeDB extends DBSchema {
 
 const defaultUserPreference: UserPreferences = {
     version: 1,
-    appEnabled: true,
+    isAppEnabled: true,
     studyLanguage: undefined,
     guideLanguage: undefined,
 };

@@ -10,4 +10,4 @@ export const store = configureStore({
 });
 
 export type RootState = ReturnType<typeof store.getState>; // type of state when using useSelector
-export type AppDispatch = typeof store.dispatch; // type of dispatch function when using useDispatch
+export type StoreDispatch = typeof store.dispatch; // type of dispatch function when using useDispatch

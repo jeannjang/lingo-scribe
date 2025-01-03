@@ -1,47 +1,64 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { assertExhaustive } from '../../../helpers';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { UserPreferences } from '../../../types/userPreferences';
+import {
+    GetUserPreferencesRequest,
+    GetUserPreferencesResponse,
+    SetUserPreferences,
+} from '../../../types/messages';
+import { AsyncRequestStatus } from '../../../types/status';
 
 interface UserSliceState {
-    studyLanguage: {
-        bcp47?: string;
-    };
-    guideLanguage: {
-        bcp47?: string;
-    };
+    preferences: UserPreferences | undefined;
+    status: AsyncRequestStatus;
 }
 
 const initialState: UserSliceState = {
-    studyLanguage: {
-        bcp47: undefined,
-    },
-    guideLanguage: {
-        bcp47: undefined,
-    },
+    preferences: undefined,
+    status: 'idle',
 };
+
+export const fetchUserPreferences = createAsyncThunk(
+    'USER_PREFERENCES/FETCH',
+    async () => {
+        return await chrome.runtime.sendMessage<
+            GetUserPreferencesRequest,
+            GetUserPreferencesResponse
+        >({
+            type: 'USER_PREFERENCES/GET',
+        });
+    }
+);
 
 const userSlice = createSlice({
     name: 'user',
     initialState,
+    // This is for actions that don't require async logic
     reducers: {
-        setUserLanguage: (
-            state,
-            action: PayloadAction<{ type: 'study' | 'guide'; bcp47: string }>
-        ) => {
-            const { type, bcp47 } = action.payload;
+        setUserPreferences: (state, action: { payload: UserPreferences }) => {
+            state.preferences = action.payload;
 
-            switch (type) {
-                case 'study':
-                    state.studyLanguage.bcp47 = bcp47;
-                    return;
-                case 'guide':
-                    state.guideLanguage.bcp47 = bcp47;
-                    return;
-                default:
-                    assertExhaustive(type);
-            }
+            // one-way notification to service worker
+            chrome.runtime.sendMessage<SetUserPreferences, void>({
+                type: 'USER_PREFERENCES/SET',
+                payload: { userPreferences: action.payload },
+            });
         },
+    },
+    // This is for thunk actions that require async logic
+    extraReducers: (builder) => {
+        builder
+
+            .addCase(fetchUserPreferences.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(fetchUserPreferences.fulfilled, (state, action) => {
+                state.status = 'success';
+                state.preferences = action.payload;
+            })
+            .addCase(fetchUserPreferences.rejected, (state) => {
+                state.status = 'fail';
+            });
     },
 });
 
-export const { setUserLanguage } = userSlice.actions;
 export default userSlice.reducer;
