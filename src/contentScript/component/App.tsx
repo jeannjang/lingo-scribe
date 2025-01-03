@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserPreferences } from './store/userSlice';
 import { RootState, StoreDispatch } from './store/store';
@@ -13,7 +12,7 @@ const App = () => {
     }
 
     return (
-        <div className="app-container">
+        <div className="fixed w-full h-full bg-amber-200">
             <h1>Subtitle Extension</h1>
         </div>
     );

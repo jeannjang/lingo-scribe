@@ -4,6 +4,8 @@ import App from './App';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
 
+import './Index.css';
+
 const REACT_ROOT_ID = 'subtitle-extension-react-root';
 
 let rootElement = document.getElementById(REACT_ROOT_ID);
