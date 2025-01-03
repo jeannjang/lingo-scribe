@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css';
+import TestBox from './features/TestBox';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserPreferences } from './store/userSlice';
 import { RootState, StoreDispatch } from './store/store';
@@ -12,11 +12,7 @@ const App = () => {
         dispatch(fetchUserPreferences());
     }
 
-    return (
-        <div className="app-container">
-            <h1>Subtitle Extension</h1>
-        </div>
-    );
+    return <TestBox />;
 };
 
 export default App;
