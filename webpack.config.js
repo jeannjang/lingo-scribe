@@ -7,6 +7,9 @@ module.exports = (env, argv) => {
   return {
     devtool: isProduction ? 'source-map' : 'inline-source-map',
     resolve: {
+      alias: {
+        "@/*": path.resolve(__dirname, './*')
+      },
       extensions: ['.tsx', '.ts', '.jsx', '.js'],
     },
     entry: {
