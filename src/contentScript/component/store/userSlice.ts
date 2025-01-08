@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { UserPreferences } from '../../../types/userPreferences';
 import {
     GetUserPreferencesRequest,
@@ -34,7 +34,7 @@ const userSlice = createSlice({
     initialState,
     // This is for actions that don't require async logic
     reducers: {
-        setUserPreferences: (state, action: { payload: UserPreferences }) => {
+        setUserPreferences: (state, action: PayloadAction<UserPreferences>) => {
             state.preferences = action.payload;
 
             // one-way notification to service worker
@@ -47,7 +47,6 @@ const userSlice = createSlice({
     // This is for thunk actions that require async logic
     extraReducers: (builder) => {
         builder
-
             .addCase(fetchUserPreferences.pending, (state) => {
                 state.status = 'loading';
             })
@@ -62,3 +61,4 @@ const userSlice = createSlice({
 });
 
 export default userSlice.reducer;
+export const { setUserPreferences } = userSlice.actions;
