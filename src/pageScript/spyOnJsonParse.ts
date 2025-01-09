@@ -11,7 +11,7 @@ const spyOnJsonParse = (windowObject: Window & { JSON: any }) => {
     windowObject.JSON.parse = (
         ...args: Parameters<typeof originalJsonParse>
     ) => {
-        const result = originalJsonParse(...args);
+        const result = originalJsonParse.apply(windowObject, args);
 
         if (result && result.result && result.result.movieId) {
             // Extract subtitle download URLs from the JSON response
