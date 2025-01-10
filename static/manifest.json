@@ -8,7 +8,7 @@
     "content_scripts": [
         {
             "js": ["contentScript.js"],
-            "matches": ["*://*.netflix.com/watch/*"],
+            "matches": ["*://*.netflix.com/*"],
             "run_at": "document_end"
         }
     ],
