@@ -9,6 +9,7 @@ import {
 import spyOnJsonParse from './spyOnJsonParse';
 import { getSubtitleDownloadUrls } from './subtitleDownloadUrlsStore';
 import parseXmlToSubtitles from './parseXmlToSubtitles';
+import spyOnPageUrl from '@/src/pageScript/spyOnPageUrl';
 
 // This code is injected into the page by contentScript.ts,
 // and it is executed in the page's context, unlike contentScript.ts and serviceWorker.ts.
@@ -137,6 +138,7 @@ const addSubtitleRequestMessageListener = (
 
 const main = async () => {
     spyOnJsonParse(window);
+    spyOnPageUrl(window);
 
     const netflixVideoPlayer = await getNetflixVideoPlayerAsync(window);
     const timedTextTrackList =
