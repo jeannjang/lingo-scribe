@@ -22,17 +22,29 @@ interface NetflixVideoPlayer {
     setTimedTextTrack: (textTrack: NetflixTimedTextTrack) => void;
 }
 
+const getNetflixVideoPlayer = (windowObject: Window & { netflix?: any }) => {
+    try {
+        const playerAppApi =
+            windowObject.netflix.appContext.state.playerApp.getAPI();
+        const playerSessionId =
+            playerAppApi.videoPlayer.getAllPlayerSessionIds()[0];
+        return playerAppApi.videoPlayer.getVideoPlayerBySessionId(
+            playerSessionId
+        ) as NetflixVideoPlayer;
+    } catch (_) {
+        return undefined;
+    }
+};
+
 const getNetflixVideoPlayerAsync = async (
     windowObject: Window & { netflix?: any }
 ) => {
-    await waitUntilAsync(() => windowObject.netflix);
-    const playerAppApi =
-        windowObject.netflix.appContext.state.playerApp.getAPI();
-    const playerSessionId =
-        playerAppApi.videoPlayer.getAllPlayerSessionIds()[0];
-    return playerAppApi.videoPlayer.getVideoPlayerBySessionId(
-        playerSessionId
-    ) as NetflixVideoPlayer;
+    await waitUntilAsync(
+        () => getNetflixVideoPlayer(windowObject) != undefined,
+        50,
+        10000
+    );
+    return getNetflixVideoPlayer(windowObject) as NetflixVideoPlayer;
 };
 
 const getTimedTextTrackListAsync = async (videoPlayer: NetflixVideoPlayer) => {
