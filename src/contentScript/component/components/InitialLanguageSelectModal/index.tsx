@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     Dialog,
     DialogContent,
@@ -18,6 +18,7 @@ import { useState } from 'react';
 import { setUserPreferences } from '@/src/contentScript/component/store/userSlice';
 import { setUserPreferences as setUserPreferencesInDB } from '@/src/serviceWorker/indexedDbOperations';
 import { UserPreferences } from '@/src/types/userPreferences';
+import { VideoPauseMessage, VideoPlayMessage } from '@/src/types/messages';
 
 const InitialLanguageSelectModal = () => {
     const dispatch = useDispatch<StoreDispatch>();
@@ -25,6 +26,17 @@ const InitialLanguageSelectModal = () => {
 
     const isInitialLanguageModalOpen =
         userState.status === 'success' && !userState.preferences?.studyLanguage;
+
+    useEffect(() => {
+        if (isInitialLanguageModalOpen) {
+            console.log('pausing video');
+            window.postMessage(
+                { type: 'VIDEO/PAUSE' } satisfies VideoPauseMessage,
+                '*'
+            );
+        }
+        return () => {};
+    }, [isInitialLanguageModalOpen]);
 
     const [studyLanguage, setStudyLanguage] = useState<string | undefined>();
     const [guideLanguage, setGuideLanguage] = useState<string | undefined>();
@@ -42,6 +54,11 @@ const InitialLanguageSelectModal = () => {
         dispatch(setUserPreferences(preferences));
 
         await setUserPreferencesInDB(preferences);
+
+        window.postMessage(
+            { type: 'VIDEO/PLAY' } satisfies VideoPlayMessage,
+            '*'
+        );
     };
 
     return (

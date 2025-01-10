@@ -21,6 +21,8 @@ interface NetflixTimedTextTrack {
 interface NetflixVideoPlayer {
     getTimedTextTrackList: () => NetflixTimedTextTrack[];
     setTimedTextTrack: (textTrack: NetflixTimedTextTrack) => void;
+    pause: () => void;
+    play: () => void;
 }
 
 const getNetflixVideoPlayer = (windowObject: Window & { netflix?: any }) => {
@@ -65,10 +67,27 @@ const sendSubtitleFetchErrorMessage = (message: string) => {
     );
 };
 
-const addSubtitleRequestMessageListener = (
-    windowObject: Window,
-    netflixVideoPlayer: NetflixVideoPlayer
-) => {
+const addVideoControlMessageListener = (windowObject: Window) => {
+    windowObject.onmessage = async (event) => {
+        console.log('Received message from content script ', event.data);
+        const netflixVideoPlayer =
+            await getNetflixVideoPlayerAsync(windowObject);
+        switch (event.data.type) {
+            case messageType.videoPause: {
+                console.log('Received video pause message ', event.data);
+                netflixVideoPlayer.pause();
+                return;
+            }
+            case messageType.videoPlay: {
+                console.log('Received video play message ', event.data);
+                netflixVideoPlayer.play();
+                return;
+            }
+        }
+    };
+};
+
+const addSubtitleRequestMessageListener = (windowObject: Window) => {
     windowObject.onmessage = async (event) => {
         const eventType = event.data.type;
         if (eventType === messageType.subtitleRequest) {
@@ -80,6 +99,8 @@ const addSubtitleRequestMessageListener = (
             // If not, set the target timedTextTrack to netflix video player and wait for the download URLs to be stored.
             // spyOnJsonParse will intercept calls and store the target subtitleDownloadUrls.
             if (!getSubtitleDownloadUrls()[bcp47]) {
+                const netflixVideoPlayer =
+                    await getNetflixVideoPlayerAsync(window);
                 const selectedTimedTextTrack = netflixVideoPlayer
                     .getTimedTextTrackList()
                     .find((textTrack: any) => textTrack.bcp47 === bcp47);
@@ -137,14 +158,15 @@ const addSubtitleRequestMessageListener = (
 };
 
 const main = async () => {
+    console.log('PageScript is loaded');
     spyOnJsonParse(window);
     spyOnPageUrl(window);
+    addVideoControlMessageListener(window);
+    addSubtitleRequestMessageListener(window);
 
     const netflixVideoPlayer = await getNetflixVideoPlayerAsync(window);
     const timedTextTrackList =
         await getTimedTextTrackListAsync(netflixVideoPlayer);
-
-    addSubtitleRequestMessageListener(window, netflixVideoPlayer);
 
     const bcp47List = timedTextTrackList
         .filter((textTrack: any) => textTrack.bcp47)

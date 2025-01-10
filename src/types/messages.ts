@@ -9,6 +9,8 @@ export const messageType = {
     subtitleFetchError: 'SUBTITLE/FETCH_ERROR',
     getUserPreferences: 'USER_PREFERENCES/GET',
     setUserPreferences: 'USER_PREFERENCES/SET',
+    videoPause: 'VIDEO/PAUSE',
+    videoPlay: 'VIDEO/PLAY',
 } as const;
 
 type MessageBase = {
@@ -55,4 +57,11 @@ export interface SetUserPreferences extends MessageBase {
     payload: {
         userPreferences: UserPreferences;
     };
+}
+export interface VideoPauseMessage extends MessageBase {
+    type: 'VIDEO/PAUSE';
+}
+
+export interface VideoPlayMessage extends MessageBase {
+    type: 'VIDEO/PLAY';
 }
