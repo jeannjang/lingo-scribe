@@ -2,6 +2,7 @@ import { Subtitle } from './subtitle';
 import { UserPreferences } from './userPreferences';
 
 export const messageType = {
+    windowOnPlayerPage: 'APP/WINDOW_ON_PLAYER_PAGE',
     availableBcp47List: 'SUBTITLE/AVAILABLE_BCP47_LIST',
     subtitleRequest: 'SUBTITLE/REQUEST',
     subtitleResponse: 'SUBTITLE/RESPONSE',
@@ -13,6 +14,11 @@ export const messageType = {
 type MessageBase = {
     type: (typeof messageType)[keyof typeof messageType];
 };
+
+export interface WindowOnPlayerPage extends MessageBase {
+    type: 'APP/WINDOW_ON_PLAYER_PAGE';
+    payload: boolean;
+}
 
 export interface AvailableBcp47ListMessage extends MessageBase {
     type: 'SUBTITLE/AVAILABLE_BCP47_LIST';
