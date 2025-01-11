@@ -1,7 +1,7 @@
 import { waitUntilAsync } from '../helpers';
 import {
-    AvailableBcp47ListMessage,
-    messageType,
+    AvailableBcp47ListResponseMessage,
+    messageType, PageScriptIsReadyMessage,
     SubtitleFetchError,
     SubtitleRequestMessage,
     SubtitleResponseMessage,
@@ -72,27 +72,24 @@ const sendSubtitleFetchErrorMessage = (message: string) => {
 };
 
 const addVideoControlMessageListener = (windowObject: Window) => {
-    windowObject.onmessage = async (event) => {
-        console.log('Received message from content script ', event.data);
+    windowObject.addEventListener('message', async (event) => {
         const netflixVideoPlayer =
             await getNetflixVideoPlayerAsync(windowObject);
         switch (event.data.type) {
             case messageType.videoPause: {
-                console.log('Received video pause message ', event.data);
                 netflixVideoPlayer.pause();
                 return;
             }
             case messageType.videoPlay: {
-                console.log('Received video play message ', event.data);
                 netflixVideoPlayer.play();
                 return;
             }
         }
-    };
+    });
 };
 
 const addSubtitleRequestMessageListener = (windowObject: Window) => {
-    windowObject.onmessage = async (event) => {
+    windowObject.addEventListener('message', async (event) => {
         const eventType = event.data.type;
         if (eventType === messageType.subtitleRequest) {
             const {
@@ -158,29 +155,46 @@ const addSubtitleRequestMessageListener = (windowObject: Window) => {
                 '*'
             );
         }
-    };
+    });
+};
+
+const addAvailableLanguageListRequestMessageListener = (
+    windowObject: Window
+) => {
+    windowObject.addEventListener('message', async (event) => {
+        if (event.data.type === messageType.availableBcp47ListRequest) {
+            const netflixVideoPlayer = await getNetflixVideoPlayerAsync(window);
+            const timedTextTrackList =
+                await getTimedTextTrackListAsync(netflixVideoPlayer);
+
+            const bcp47List = timedTextTrackList
+                .filter((textTrack: any) => textTrack.bcp47)
+                .map((textTrack: any) => textTrack.bcp47);
+
+            window.postMessage(
+                {
+                    type: 'SUBTITLE/AVAILABLE_BCP47_LIST_RESPONSE',
+                    payload: bcp47List,
+                } satisfies AvailableBcp47ListResponseMessage,
+                '*'
+            );
+        }
+    });
 };
 
 const main = async () => {
-    console.log('PageScript is loaded');
     spyOnJsonParse(window);
     spyOnPageUrl(window);
+
     addVideoControlMessageListener(window);
     addSubtitleRequestMessageListener(window);
+    addAvailableLanguageListRequestMessageListener(window);
 
-    const netflixVideoPlayer = await getNetflixVideoPlayerAsync(window);
-    const timedTextTrackList =
-        await getTimedTextTrackListAsync(netflixVideoPlayer);
-
-    const bcp47List = timedTextTrackList
-        .filter((textTrack: any) => textTrack.bcp47)
-        .map((textTrack: any) => textTrack.bcp47);
-
+    // Send a message to the content script to let it know that the pageScript is ready.
     window.postMessage(
         {
-            type: 'SUBTITLE/AVAILABLE_BCP47_LIST',
-            payload: bcp47List,
-        } satisfies AvailableBcp47ListMessage,
+            type: 'APP/PAGE_SCRIPT_IS_READY',
+        } satisfies PageScriptIsReadyMessage,
         '*'
     );
 };
