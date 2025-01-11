@@ -1,7 +1,7 @@
-import './component/index.tsx';
 import { messageType } from '@/src/types/messages';
 import { store } from '@/src/contentScript/component/store/store';
 import { setIsWindowOnPlayerPage } from '@/src/contentScript/component/store/appSlice';
+import { renderReactApp } from '@/src/contentScript/component';
 
 console.log('ContentScript is loaded');
 
@@ -19,6 +19,10 @@ window.addEventListener('load', () => {
 
 window.onmessage = (event) => {
     switch (event.data.type) {
+        case messageType.pageScriptIsReady: {
+            renderReactApp();
+            return;
+        }
         case messageType.windowOnPlayerPage: {
             store.dispatch(
                 setIsWindowOnPlayerPage({
@@ -27,7 +31,7 @@ window.onmessage = (event) => {
             );
             return;
         }
-        case messageType.availableBcp47List: {
+        case messageType.availableBcp47ListResponse: {
             // TODO: This list will be stored in a Redux store later
             console.log('Received message from pageScript ', event.data);
             return;

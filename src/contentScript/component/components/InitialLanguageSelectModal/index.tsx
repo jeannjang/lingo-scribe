@@ -29,7 +29,6 @@ const InitialLanguageSelectModal = () => {
 
     useEffect(() => {
         if (isInitialLanguageModalOpen) {
-            console.log('pausing video');
             window.postMessage(
                 { type: 'VIDEO/PAUSE' } satisfies VideoPauseMessage,
                 '*'
