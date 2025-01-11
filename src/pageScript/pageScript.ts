@@ -30,7 +30,11 @@ const getNetflixVideoPlayer = (windowObject: Window & { netflix?: any }) => {
         const playerAppApi =
             windowObject.netflix.appContext.state.playerApp.getAPI();
         const playerSessionId =
-            playerAppApi.videoPlayer.getAllPlayerSessionIds()[0];
+            playerAppApi.videoPlayer.getAllPlayerSessionIds()[0] as string;
+        // Check if the playerSessionId is a watch session.
+        if (!playerSessionId.startsWith('watch')) {
+            return undefined;
+        }
         return playerAppApi.videoPlayer.getVideoPlayerBySessionId(
             playerSessionId
         ) as NetflixVideoPlayer;
