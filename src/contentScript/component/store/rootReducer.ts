@@ -1,5 +1,5 @@
 import appReducer from '@/src/contentScript/component/store/appSlice';
-import subtitleReducer from '@/src/contentScript/component/store/subtitleSlice';
+import subtitleReducer from '@/src/contentScript/component/store/subtitleReducer';
 import userReducer from '@/src/contentScript/component/store/userReducer';
 
 const rootReducer = {
