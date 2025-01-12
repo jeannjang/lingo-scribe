@@ -1,7 +1,7 @@
 import { messageType } from '@/src/types/messages';
 import { store } from '@/src/contentScript/component/store/store';
-import { setIsWindowOnPlayerPage } from '@/src/contentScript/component/store/appSlice';
 import { renderReactApp } from '@/src/contentScript/component';
+import { isWindowOnPlayerPageSet } from '@/src/contentScript/component/actions';
 
 console.log('ContentScript is loaded');
 
@@ -25,7 +25,7 @@ window.onmessage = (event) => {
         }
         case messageType.windowOnPlayerPage: {
             store.dispatch(
-                setIsWindowOnPlayerPage({
+                isWindowOnPlayerPageSet({
                     isWindowOnPlayerPage: event.data.payload,
                 })
             );
