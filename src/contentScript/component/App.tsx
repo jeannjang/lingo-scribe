@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState, StoreDispatch } from './store/store';
 import InitialLanguageSelectModal from '@/src/contentScript/component/components/InitialLanguageSelectModal';
 import { determineIfWindowOnPlayerPage } from '@/src/pageScript/spyOnPageUrl';
-import { setIsWindowOnPlayerPage } from '@/src/contentScript/component/store/appSlice';
 import { fetchUserPreferencesInitialised } from '@/src/contentScript/component/actions/userActions';
+import { isWindowOnPlayerPageSet } from '@/src/contentScript/component/actions';
 
 const App = () => {
     const dispatch = useDispatch<StoreDispatch>();
@@ -17,7 +17,7 @@ const App = () => {
     useEffect(() => {
         const currentUrl = window.location.href;
         dispatch(
-            setIsWindowOnPlayerPage({
+            isWindowOnPlayerPageSet({
                 isWindowOnPlayerPage: determineIfWindowOnPlayerPage(currentUrl),
             })
         );
