@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchUserPreferences } from './store/userSlice';
 import { RootState, StoreDispatch } from './store/store';
 import InitialLanguageSelectModal from '@/src/contentScript/component/components/InitialLanguageSelectModal';
 import { determineIfWindowOnPlayerPage } from '@/src/pageScript/spyOnPageUrl';
 import { setIsWindowOnPlayerPage } from '@/src/contentScript/component/store/appSlice';
+import { fetchUserPreferencesInitialised } from '@/src/contentScript/component/actions/userActions';
 
 const App = () => {
     const dispatch = useDispatch<StoreDispatch>();
@@ -28,7 +28,7 @@ const App = () => {
     }
 
     if (userState.status === 'idle') {
-        dispatch(fetchUserPreferences());
+        dispatch(fetchUserPreferencesInitialised());
     }
 
     return <InitialLanguageSelectModal />;

@@ -15,10 +15,10 @@ import {
 } from '@/src/contentScript/component/store/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
-import { setUserPreferences } from '@/src/contentScript/component/store/userSlice';
 import { setUserPreferences as setUserPreferencesInDB } from '@/src/serviceWorker/indexedDbOperations';
 import { UserPreferences } from '@/src/types/userPreferences';
 import { VideoPauseMessage, VideoPlayMessage } from '@/src/types/messages';
+import { userPreferencesSet } from '@/src/contentScript/component/actions';
 
 const InitialLanguageSelectModal = () => {
     const dispatch = useDispatch<StoreDispatch>();
@@ -50,7 +50,7 @@ const InitialLanguageSelectModal = () => {
             guideLanguage,
         };
 
-        dispatch(setUserPreferences(preferences));
+        dispatch(userPreferencesSet(preferences));
 
         await setUserPreferencesInDB(preferences);
 
