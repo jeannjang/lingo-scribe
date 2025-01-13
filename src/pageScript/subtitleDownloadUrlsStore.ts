@@ -26,3 +26,9 @@ export const addSubtitleDownloadUrls = (
         }
     });
 };
+
+export const resetSubtitleDownloadUrls = () => {
+    Object.keys(subtitleDownloadUrls).map((bcp47) => {
+        delete subtitleDownloadUrls[bcp47];
+    });
+};

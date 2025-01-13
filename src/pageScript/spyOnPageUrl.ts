@@ -1,14 +1,17 @@
 import { WindowOnPlayerPage } from '@/src/types/messages';
+import { resetSubtitleDownloadUrls } from '@/src/pageScript/subtitleDownloadUrlsStore';
 
 export const determineIfWindowOnPlayerPage = (url: string | URL) =>
     typeof url === 'string'
         ? url.includes('/watch/')
         : url.href.includes('/watch/');
 
-const sendWindowOnPlayerPageMessage = (
-    url: string | URL | null | undefined
-) => {
+const handleUrl = (url: string | URL | null | undefined) => {
     if (url) {
+        if (determineIfWindowOnPlayerPage(url)) {
+            resetSubtitleDownloadUrls();
+        }
+
         window.postMessage({
             type: 'APP/WINDOW_ON_PLAYER_PAGE',
             payload: determineIfWindowOnPlayerPage(url),
@@ -19,7 +22,7 @@ const spyOnPageUrl = (windowObject: Window) => {
     // addEventListener on popState
     windowObject.addEventListener('popstate', () => {
         const currentUrl = windowObject.location.href;
-        sendWindowOnPlayerPageMessage(currentUrl);
+        handleUrl(currentUrl);
     });
 
     // Spy pushState
@@ -30,7 +33,7 @@ const spyOnPageUrl = (windowObject: Window) => {
     ) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const [_, __, url] = args;
-        sendWindowOnPlayerPageMessage(url);
+        handleUrl(url);
         return originalPushState.apply(windowObject.history, args);
     };
 
@@ -42,7 +45,7 @@ const spyOnPageUrl = (windowObject: Window) => {
     ) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const [_, __, url] = args;
-        sendWindowOnPlayerPageMessage(url);
+        handleUrl(url);
         return originalReplaceState.apply(windowObject.history, args);
     };
 };
