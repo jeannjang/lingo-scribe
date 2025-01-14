@@ -5,7 +5,7 @@ module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
 
   return {
-    devtool: isProduction ? 'source-map' : 'inline-source-map',
+    devtool: 'inline-source-map',
     resolve: {
       alias: {
         "@/*": path.resolve(__dirname, './*')
