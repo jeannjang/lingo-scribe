@@ -9,7 +9,7 @@ import {
     userPreferencesSet,
 } from '@/src/contentScript/component/actions/userActions';
 
-interface UserSliceState {
+export interface UserSliceState {
     preferences: UserPreferences | undefined;
     status: AsyncRequestStatus;
 }
