@@ -1,7 +1,7 @@
 export const waitUntilAsync = async (
     condition: () => boolean | Promise<boolean>,
     pollIntervalMs: number = 50,
-    timeoutAfterMs: number = 5000
+    timeoutAfterMs: number = 60000
 ) => {
     const startTime = Date.now();
 
