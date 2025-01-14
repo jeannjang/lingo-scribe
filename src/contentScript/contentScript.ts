@@ -31,22 +31,8 @@ window.onmessage = (event) => {
             );
             return;
         }
-        case messageType.availableBcp47ListResponse: {
-            // TODO: This list will be stored in a Redux store later
-            console.log('Received message from pageScript ', event.data);
-            return;
-        }
-        case messageType.subtitleResponse: {
-            // TODO: This list will be stored in a Redux store later
-            console.log(
-                'Received message from pageScript ',
-                event.data.payload
-            );
-            return;
-        }
         case messageType.subtitleFetchError: {
-            // TODO: Will let the user know that the subtitle fetch failed
-            console.log('Received message from pageScript ', event.data);
+            console.log('Subtitle Fetch Error:', event.data.payload.message);
             return;
         }
     }
