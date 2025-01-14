@@ -1,7 +1,8 @@
 import { waitUntilAsync } from '../helpers';
 import {
     AvailableBcp47ListResponseMessage,
-    messageType, PageScriptIsReadyMessage,
+    messageType,
+    PageScriptIsReadyMessage,
     SubtitleFetchError,
     SubtitleRequestMessage,
     SubtitleResponseMessage,
@@ -47,9 +48,7 @@ const getNetflixVideoPlayerAsync = async (
     windowObject: Window & { netflix?: any }
 ) => {
     await waitUntilAsync(
-        () => getNetflixVideoPlayer(windowObject) != undefined,
-        50,
-        10000
+        () => getNetflixVideoPlayer(windowObject) != undefined
     );
     return getNetflixVideoPlayer(windowObject) as NetflixVideoPlayer;
 };
