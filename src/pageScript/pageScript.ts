@@ -113,6 +113,9 @@ const addSubtitleRequestMessageListener = (windowObject: Window) => {
                 }
 
                 netflixVideoPlayer.setTimedTextTrack(selectedTimedTextTrack);
+                console.debug(
+                    'Waiting for subtitle download urls to be stored'
+                );
 
                 try {
                     await waitUntilAsync(() => {
@@ -132,7 +135,7 @@ const addSubtitleRequestMessageListener = (windowObject: Window) => {
 
             // Fetch the first subtitle download url
             const response = await fetch(urls[0]);
-
+            console.debug('response', response);
             if (!response.ok) {
                 sendSubtitleFetchErrorMessage(
                     `Failed to fetch subtitle for ${bcp47}`

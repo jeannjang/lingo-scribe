@@ -5,6 +5,7 @@ import InitialLanguageSelectModal from '@/src/contentScript/component/components
 import { determineIfWindowOnPlayerPage } from '@/src/pageScript/spyOnPageUrl';
 import { fetchUserPreferencesInitialised } from '@/src/contentScript/component/actions/userActions';
 import { isWindowOnPlayerPageSet } from '@/src/contentScript/component/actions';
+import SubtitleDeck from '@/src/contentScript/component/components/SubtitleDeck';
 
 const App = () => {
     const dispatch = useDispatch<StoreDispatch>();
@@ -31,7 +32,12 @@ const App = () => {
         dispatch(fetchUserPreferencesInitialised());
     }
 
-    return <InitialLanguageSelectModal />;
+    return (
+        <>
+            <InitialLanguageSelectModal />
+            <SubtitleDeck />
+        </>
+    );
 };
 
 export default App;
