@@ -13,6 +13,7 @@ export const messageType = {
     setUserPreferences: 'USER_PREFERENCES/SET',
     videoPause: 'VIDEO/PAUSE',
     videoPlay: 'VIDEO/PLAY',
+    videoSeekMs: 'VIDEO/SEEK_MS',
 } as const;
 
 type MessageBase = {
@@ -74,4 +75,11 @@ export interface VideoPauseMessage extends MessageBase {
 
 export interface VideoPlayMessage extends MessageBase {
     type: 'VIDEO/PLAY';
+}
+
+export interface VideoSeekMsMessage extends MessageBase {
+    type: 'VIDEO/SEEK_MS';
+    payload: {
+        seekMs: number;
+    };
 }

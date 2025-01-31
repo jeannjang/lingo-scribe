@@ -6,6 +6,7 @@ import {
     SubtitleFetchError,
     SubtitleRequestMessage,
     SubtitleResponseMessage,
+    VideoSeekMsMessage
 } from '../types/messages';
 import spyOnJsonParse from './spyOnJsonParse';
 import { getSubtitleDownloadUrls } from './subtitleDownloadUrlsStore';
@@ -24,6 +25,7 @@ interface NetflixVideoPlayer {
     setTimedTextTrack: (textTrack: NetflixTimedTextTrack) => void;
     pause: () => void;
     play: () => void;
+    seek: (seekMs: number) => void;
 }
 
 const getNetflixVideoPlayer = (windowObject: Window & { netflix?: any }) => {
@@ -81,6 +83,13 @@ const addVideoControlMessageListener = (windowObject: Window) => {
             }
             case messageType.videoPlay: {
                 netflixVideoPlayer.play();
+                return;
+            }
+            case messageType.videoSeekMs: {
+                const {
+                    payload: { seekMs },
+                } = event.data as VideoSeekMsMessage;
+                netflixVideoPlayer.seek(seekMs);
                 return;
             }
         }
