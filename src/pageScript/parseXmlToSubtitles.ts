@@ -38,6 +38,8 @@ const parseXmlToSubtitles = (xmlSubtitleString: string): SubtitleLine[] => {
             })
             .map((subtitleLine) => {
                 const sanitizedText = subtitleLine.text
+                    // to merge subtitles that were split into two lines by <br> tags, replacing it with a space.
+                    .replace(/<br\b[^>]*\/?>/g, ' ')
                     // Removing tags in <>, () or [] which are not human spoken text
                     .replace(/(\[[^\]]*\]|<[^>]*>|\([^)]*\))/g, '')
                     // When there are multiple characters lines are in one text line, they are separated by '-'
