@@ -34,7 +34,6 @@ const InitialLanguageSelectModal = () => {
                 '*'
             );
         }
-        return () => {};
     }, [isInitialLanguageModalOpen]);
 
     const [studyLanguage, setStudyLanguage] = useState<string | undefined>();
