@@ -5,9 +5,10 @@ import useVideoCurrentTime from '@/src/contentScript/component/hooks/useVideoCur
 
 interface IProps {
     subtitle?: Subtitle;
+    isUserAnswerChecking: boolean;
 }
 
-const SubtitleBar: React.FC<IProps> = ({ subtitle }) => {
+const SubtitleBar: React.FC<IProps> = ({ subtitle, isUserAnswerChecking }) => {
     const currentTime = useVideoCurrentTime(100);
 
     const currentSubtitleLines = currentTime
@@ -37,7 +38,11 @@ const SubtitleBar: React.FC<IProps> = ({ subtitle }) => {
     return (
         <>
             {currentSubtitleLines?.map((line) => (
-                <h2 className={'text-white text-xl'}>{line.text}</h2>
+                <text
+                    className={`text-white text-base md:text-2xl ${isUserAnswerChecking ? 'opacity-100' : 'opacity-0'}`}
+                >
+                    {line.text}
+                </text>
             ))}
         </>
     );
