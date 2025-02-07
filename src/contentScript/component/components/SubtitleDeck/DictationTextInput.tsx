@@ -14,7 +14,31 @@ interface IProps {
 const DictationTextInput = ({ subtitle, setIsUserAnswerChecking }: IProps) => {
     const [inputValue, setInputValue] = useState('');
     const inputRef = useRef<HTMLInputElement>(null);
+    const previousIndexRef = useRef<number>(-1);
     const currentTime = useVideoCurrentTime();
+
+    const findCurrentIndex = (
+        subtitleLines: SubtitleLine[] | undefined,
+        currentTime: number | undefined
+    ) => {
+        if (!subtitleLines || currentTime === undefined) return -1;
+        console.log('Not founded subtitle or currentTime');
+
+        return subtitleLines.findIndex(
+            (line) =>
+                currentTime >= line.beginMs / 1000 &&
+                currentTime <= line.endMs / 1000
+        );
+    };
+
+    // Centralized state update logic when currentIndex is different from previousIndex
+    const currentIndex = findCurrentIndex(subtitle?.subtitleLines, currentTime);
+    if (currentIndex !== previousIndexRef.current) {
+        setIsUserAnswerChecking(false); // hide subtitleLine (opacity-0 in SubtitleBar.tsx)
+        setInputValue(''); // clear up input value
+        inputRef.current?.focus(); // stay in focus with onClick event
+        previousIndexRef.current = currentIndex; // Update state of currentIndex into previouseIndexRef.current
+    }
 
     const onHandleChange = (event: ChangeEvent<HTMLInputElement>) => {
         setInputValue(event.target.value);
@@ -26,10 +50,6 @@ const DictationTextInput = ({ subtitle, setIsUserAnswerChecking }: IProps) => {
     };
 
     const handlePlay = () => {
-        setIsUserAnswerChecking(false); // hide subtitleLine (opacity-0 in SubtitleBar.tsx)
-        setInputValue(''); // clear up input value
-        inputRef.current?.focus(); // stay in focus with onClick event
-
         window.postMessage(
             { type: 'VIDEO/PLAY' } satisfies VideoPlayMessage,
             '*'
@@ -41,17 +61,6 @@ const DictationTextInput = ({ subtitle, setIsUserAnswerChecking }: IProps) => {
         subtitleLines: SubtitleLine[],
         currentTime: number
     ) => {
-        if (currentTime === undefined) return null;
-        console.log('Not founded subtitle or currentTime');
-
-        const currentIndex = subtitleLines.findIndex(
-            (line) =>
-                currentTime >= line.beginMs / 1000 &&
-                currentTime <= line.endMs / 1000
-        );
-        console.log('currentTime?:', currentTime);
-        console.log('currentIndex?:', currentIndex);
-
         if (currentIndex === -1) {
             const prevLineIndex = subtitleLines.findLastIndex(
                 (line) => line.beginMs / 1000 < currentTime
@@ -116,11 +125,11 @@ const DictationTextInput = ({ subtitle, setIsUserAnswerChecking }: IProps) => {
                         '*'
                     );
                 }
-                setIsUserAnswerChecking(false);
-                if (type !== 'replay') {
-                    setInputValue('');
+
+                if (type === 'replay') {
+                    setIsUserAnswerChecking(false);
+                    inputRef.current?.focus();
                 }
-                inputRef.current?.focus();
             }
         }
     };
