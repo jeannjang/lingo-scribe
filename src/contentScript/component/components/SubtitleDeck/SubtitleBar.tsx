@@ -2,13 +2,19 @@ import React, { useEffect } from 'react';
 import { Subtitle } from '@/src/types/subtitle';
 import { VideoPauseMessage } from '@/src/types/messages';
 import useVideoCurrentTime from '@/src/contentScript/component/hooks/useVideoCurrentTime';
+import { DeckMode } from '@/src/contentScript/component/components/SubtitleDeck/index';
 
 interface IProps {
     subtitle?: Subtitle;
     isUserAnswerChecking: boolean;
+    mode: DeckMode;
 }
 
-const SubtitleBar: React.FC<IProps> = ({ subtitle, isUserAnswerChecking }) => {
+const SubtitleBar: React.FC<IProps> = ({
+    subtitle,
+    isUserAnswerChecking,
+    mode,
+}) => {
     const currentTime = useVideoCurrentTime(100);
 
     const currentSubtitleLines = currentTime
@@ -38,11 +44,15 @@ const SubtitleBar: React.FC<IProps> = ({ subtitle, isUserAnswerChecking }) => {
     return (
         <>
             {currentSubtitleLines?.map((line) => (
-                <text
-                    className={`text-white text-base md:text-2xl ${isUserAnswerChecking ? 'opacity-100' : 'opacity-0'}`}
+                <p
+                    className={`text-white text-base md:text-2xl ${
+                        mode === 'dictation' && !isUserAnswerChecking
+                            ? 'opacity-0'
+                            : 'opacity-100'
+                    }`}
                 >
                     {line.text}
-                </text>
+                </p>
             ))}
         </>
     );
