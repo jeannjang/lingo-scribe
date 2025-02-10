@@ -5,10 +5,10 @@ import { DeckMode } from '@/src/contentScript/component/components/SubtitleDeck/
 
 interface IProps {
     mode: DeckMode;
-    setModeChange: (mode: DeckMode) => void;
+    setDeckModeChange: (mode: DeckMode) => void;
 }
 
-const DeckModeSwitch: React.FC<IProps> = ({ mode, setModeChange }) => {
+const DeckModeSwitch: React.FC<IProps> = ({ mode, setDeckModeChange }) => {
     return (
         <div className="flex items-center space-x-2">
             <p className={'text-white text-sm font-medium'}>Dual Sub</p>
@@ -16,7 +16,7 @@ const DeckModeSwitch: React.FC<IProps> = ({ mode, setModeChange }) => {
                 id="dictation-mode"
                 checked={mode === 'dictation'}
                 onCheckedChange={(checked) =>
-                    setModeChange(checked ? 'dictation' : 'dualSub')
+                    setDeckModeChange(checked ? 'dictation' : 'dualSub')
                 }
             />
             <Label htmlFor="dictation-mode" className={'text-white'}>

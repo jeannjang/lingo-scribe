@@ -7,13 +7,17 @@ import { DeckMode } from '@/src/contentScript/component/components/SubtitleDeck/
 interface IProps {
     subtitle?: Subtitle;
     isUserAnswerChecking: boolean;
-    mode: DeckMode;
+    deckMode: DeckMode;
+    subType: 'study' | 'guide';
+    isAutoPause: boolean;
 }
 
 const SubtitleBar: React.FC<IProps> = ({
     subtitle,
     isUserAnswerChecking,
-    mode,
+    deckMode,
+    subType,
+    isAutoPause,
 }) => {
     const currentTime = useVideoCurrentTime(100);
 
@@ -25,10 +29,15 @@ const SubtitleBar: React.FC<IProps> = ({
           )
         : [];
 
+    const hasAutoPause =
+        subType === 'study' &&
+        (deckMode === 'dictation' || (deckMode === 'dualSub' && isAutoPause));
+
     useEffect(() => {
         // As this SubtitleBar is rendered every 100ms,
         // we need to check if the current time is within 0.1s of the end of the subtitle line
         if (
+            hasAutoPause &&
             currentTime &&
             currentSubtitleLines?.some(
                 (line) => line.endMs / 1000 - currentTime < 0.1
@@ -46,7 +55,7 @@ const SubtitleBar: React.FC<IProps> = ({
             {currentSubtitleLines?.map((line) => (
                 <p
                     className={`text-white text-base md:text-2xl ${
-                        mode === 'dictation' && !isUserAnswerChecking
+                        deckMode === 'dictation' && !isUserAnswerChecking
                             ? 'opacity-0'
                             : 'opacity-100'
                     }`}
