@@ -4,13 +4,17 @@ import { RootState } from '@/src/contentScript/component/store/store';
 import SubtitleBar from '@/src/contentScript/component/components/SubtitleDeck/SubtitleBar';
 import DictationTextInput from '@/src/contentScript/component/components/SubtitleDeck/DictationTextInput';
 import DeckModeSwitch from '@/src/contentScript/component/components/SubtitleDeck/DeckModeSwitch';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+
 export type DeckMode = 'dictation' | 'dualSub';
 const SubtitleDeck = () => {
     const subtitles = useSelector(
         (state: RootState) => state.subtitle.subtitles
     );
     const [isUserAnswerChecking, setIsUserAnswerChecking] = useState(false);
-    const [mode, setMode] = useState<DeckMode>('dictation');
+    const [deckMode, setDeckMode] = useState<DeckMode>('dictation');
+    const [isAutoPause, setIsAutoPause] = useState(false);
 
     console.log('All subtitles:', subtitles);
 
@@ -25,26 +29,43 @@ const SubtitleDeck = () => {
                     <SubtitleBar
                         subtitle={subtitles.study}
                         isUserAnswerChecking={isUserAnswerChecking}
-                        mode={mode}
+                        deckMode={deckMode}
+                        subType="study"
+                        isAutoPause={isAutoPause}
                     />
                 )}
                 {subtitles.guide && (
                     <SubtitleBar
                         subtitle={subtitles.guide}
                         isUserAnswerChecking={isUserAnswerChecking}
-                        mode={mode}
+                        deckMode={deckMode}
+                        subType="guide"
+                        isAutoPause={isAutoPause}
                     />
                 )}
 
-                {mode === 'dictation' && (
+                {deckMode === 'dictation' ? (
                     //Control video playback based on the study subtitle timestamps.
                     <DictationTextInput
                         subtitle={subtitles.study}
                         setIsUserAnswerChecking={setIsUserAnswerChecking}
                     />
+                ) : (
+                    <div className="flex items-center space-x-2">
+                        <Switch
+                            id="auto-pause"
+                            checked={isAutoPause}
+                            onCheckedChange={(checked) =>
+                                setIsAutoPause(checked)
+                            }
+                        />
+                        <Label htmlFor="auto-pause" className={'text-white'}>
+                            Auto Pause
+                        </Label>
+                    </div>
                 )}
 
-                <DeckModeSwitch mode={mode} setModeChange={setMode} />
+                <DeckModeSwitch mode={deckMode} setDeckModeChange={setDeckMode} />
             </div>
         </>
     );
