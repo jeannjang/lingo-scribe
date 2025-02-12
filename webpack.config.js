@@ -1,6 +1,8 @@
 const path = require('path');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
 
@@ -16,6 +18,7 @@ module.exports = (env, argv) => {
       serviceWorker: './src/serviceWorker/serviceWorker.ts',
       contentScript: './src/contentScript/contentScript.ts',
       pageScript: './src/pageScript/pageScript.ts',
+      popup: './src/popup/index.tsx'
     },
     output: {
       path: path.resolve(__dirname, 'dist'),
@@ -48,11 +51,12 @@ module.exports = (env, argv) => {
       new CopyPlugin({
         patterns: [
           {
-            from: "static",
+            from: "static/manifest.json",
             noErrorOnMissing: true,
           },
         ],
-      })
+      }),
+      new HtmlWebpackPlugin ({ template: './static/popup-template.html', filename: "popup.html", chunks: ["popup"]})
     ]
   }
 };
