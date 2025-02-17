@@ -1,8 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import ComboBox from '@/src/contentScript/component/components/InitialLanguageSelectModal/ComboBox';
 
 const PopupCard = () => {
+    const [studyLanguage, setStudyLanguage] = useState<string | undefined>(
+        undefined
+    );
+    const [guideLanguage, setGuideLanguage] = useState<string | undefined>(
+        undefined
+    );
+
     return (
         <div className={'w-[330px] flex flex-col p-5'}>
             {/* A: Title and App Switch*/}
@@ -22,35 +30,25 @@ const PopupCard = () => {
                     <TabsContent value={'dictation'}>
                         {/* C: Select Study Language*/}
                         <div className={'space-y-2 mb-10'}>
-                            <div
-                                className={'flex items-center justify-between'}
-                            >
-                                <h2 className={'text-lg font-semibold'}>
-                                    Study Language
-                                </h2>
-                                <div>Combo box</div>
-                            </div>
-                            {/*<ComboBox*/}
-                            {/*    value={studyLanguage}*/}
-                            {/*    onSelect={setStudyLanguage}*/}
-                            {/*/>*/}
+                            <h2 className={'text-lg font-semibold'}>
+                                Study Language
+                            </h2>
+                            <ComboBox
+                                value={studyLanguage}
+                                onSelect={setStudyLanguage}
+                            />
                             <p>This will be your target language.</p>
                         </div>
 
                         {/* C: Select Guide Language*/}
                         <div className={'space-y-2 mb-10'}>
-                            <div
-                                className={'flex items-center justify-between'}
-                            >
-                                <h2 className={'text-lg font-semibold'}>
-                                    Guide Language
-                                </h2>
-                                <div>Combo box</div>
-                            </div>
-                            {/*<ComboBox*/}
-                            {/*    value={guideLanguage}*/}
-                            {/*    onSelect={setGuideLanguage}*/}
-                            {/*/>*/}
+                            <h2 className={'text-lg font-semibold'}>
+                                Guide Language
+                            </h2>
+                            <ComboBox
+                                value={guideLanguage}
+                                onSelect={setGuideLanguage}
+                            />
                             <p>This will be your native language.</p>
                         </div>
 
@@ -71,37 +69,25 @@ const PopupCard = () => {
                     <TabsContent value={'dualSub'} className={'space-y-10'}>
                         {/* C: Select Study Language*/}
                         <div className={'space-y-2'}>
-                            <div
-                                className={'flex items-center justify-between'}
-                            >
-                                <h2 className={'text-lg font-semibold'}>
-                                    Study Language
-                                </h2>
-                                <div>Combo box</div>
-                            </div>
-
-                            {/*<ComboBox*/}
-                            {/*    value={studyLanguage}*/}
-                            {/*    onSelect={setStudyLanguage}*/}
-                            {/*/>*/}
+                            <h2 className={'text-lg font-semibold'}>
+                                Study Language
+                            </h2>
+                            <ComboBox
+                                value={studyLanguage}
+                                onSelect={setStudyLanguage}
+                            />
                             <p>This will be your target language.</p>
                         </div>
 
                         {/* C: Select Guide Language*/}
                         <div className={'space-y-2'}>
-                            <div
-                                className={'flex items-center justify-between'}
-                            >
-                                <h2 className={'text-lg font-semibold'}>
-                                    Guide Language
-                                </h2>
-                                <div>Combo box</div>
-                            </div>
-
-                            {/*<ComboBox*/}
-                            {/*    value={guideLanguage}*/}
-                            {/*    onSelect={setGuideLanguage}*/}
-                            {/*/>*/}
+                            <h2 className={'text-lg font-semibold'}>
+                                Guide Language
+                            </h2>
+                            <ComboBox
+                                value={guideLanguage}
+                                onSelect={setGuideLanguage}
+                            />
                             <p>This will be your native language.</p>
                         </div>
 
