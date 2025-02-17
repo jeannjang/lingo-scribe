@@ -1,7 +1,8 @@
 import React from 'react';
+import PopupCard from '@/src/popup/PopupCard';
 
 const App = () => {
-    return <div>This is App of popup</div>;
+    return <PopupCard />;
 };
 
 export default App;
