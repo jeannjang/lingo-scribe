@@ -1,4 +1,9 @@
-import { GetUserPreferencesResponse, messageType } from '../types/messages';
+import {
+    GetUserPreferencesResponse,
+    isSetUserPreferencesMessage,
+    messageType,
+    UserPreferencesUpdated,
+} from '../types/messages';
 import { getUserPreferences, setUserPreferences } from './indexedDbOperations';
 
 console.log('Service worker is running');
@@ -14,8 +19,32 @@ chrome.runtime.onMessage.addListener((message, _, sendResponse) => {
 });
 
 chrome.runtime.onMessage.addListener((message) => {
-    if (message.type === messageType.setUserPreferences) {
-        setUserPreferences(message.payload.userPreferences);
+    if (isSetUserPreferencesMessage(message)) {
+        setUserPreferences(message.payload.userPreferences).then(() => {
+            // Send message to Popup.ts
+            chrome.runtime.sendMessage<UserPreferencesUpdated>({
+                type: messageType.userPreferencesUpdated,
+                payload: {
+                    userPreferences: message.payload.userPreferences,
+                },
+            });
+
+            // Send message to contentscripts
+            chrome.tabs.query({}, (tabs) => {
+                tabs.forEach((tab) => {
+                    if (tab.id) {
+                        chrome.tabs.sendMessage(tab.id, {
+                            type: messageType.userPreferencesUpdated,
+                            payload: {
+                                userPreferences:
+                                    message.payload.userPreferences,
+                            },
+                        });
+                    }
+                });
+            });
+        });
+
         // Return false to indicate that we will call sendResponse synchronously
         return false;
     }

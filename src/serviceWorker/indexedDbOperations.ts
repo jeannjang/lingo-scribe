@@ -19,6 +19,8 @@ const defaultUserPreference: UserPreferences = {
     isAppEnabled: true,
     studyLanguage: undefined,
     guideLanguage: undefined,
+    deckMode: 'dictation',
+    isAutoPause: true,
 };
 
 const openLingoScribeDB = async () => {
