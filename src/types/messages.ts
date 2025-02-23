@@ -11,6 +11,7 @@ export const messageType = {
     subtitleFetchError: 'SUBTITLE/FETCH_ERROR',
     getUserPreferences: 'USER_PREFERENCES/GET',
     setUserPreferences: 'USER_PREFERENCES/SET',
+    userPreferencesUpdated: 'USER_PREFERENCES/UPDATED',
     videoPause: 'VIDEO/PAUSE',
     videoPlay: 'VIDEO/PLAY',
     videoSeekMs: 'VIDEO/SEEK_MS',
@@ -65,6 +66,26 @@ export type GetUserPreferencesResponse = UserPreferences;
 
 export interface SetUserPreferences extends MessageBase {
     type: 'USER_PREFERENCES/SET';
+    payload: {
+        userPreferences: UserPreferences;
+    };
+}
+
+// Type guard to ensures that the object has a 'type' field matching 'USER_PREFERENCES/SET'
+// and a 'payload' containing 'userPreferences'.
+export const isSetUserPreferencesMessage = (
+    object: any
+): object is SetUserPreferences => {
+    return (
+        Object.hasOwn(object, 'type') &&
+        object.type === messageType.setUserPreferences &&
+        Object.hasOwn(object, 'payload') &&
+        Object.hasOwn(object.payload, 'userPreferences')
+    );
+};
+
+export interface UserPreferencesUpdated extends MessageBase {
+    type: 'USER_PREFERENCES/UPDATED';
     payload: {
         userPreferences: UserPreferences;
     };
