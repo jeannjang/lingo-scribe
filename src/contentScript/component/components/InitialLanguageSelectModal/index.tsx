@@ -47,6 +47,8 @@ const InitialLanguageSelectModal = () => {
             isAppEnabled: true,
             studyLanguage,
             guideLanguage,
+            deckMode: 'dictation',
+            isAutoPause: true
         };
 
         dispatch(userPreferencesSet(preferences));
