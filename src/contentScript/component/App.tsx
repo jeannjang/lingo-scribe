@@ -24,7 +24,7 @@ const App = () => {
         );
     }, []);
 
-    if (!isWindowOnPlayerPage) {
+    if (!isWindowOnPlayerPage || !userState.preferences?.isAppEnabled) {
         return null;
     }
 
