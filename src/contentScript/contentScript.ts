@@ -1,7 +1,10 @@
-import { messageType } from '@/src/types/messages';
+import { messageType, UserPreferencesUpdated } from '@/src/types/messages';
 import { store } from '@/src/contentScript/component/store/store';
 import { renderReactApp } from '@/src/contentScript/component';
-import { isWindowOnPlayerPageSet } from '@/src/contentScript/component/actions';
+import {
+    isWindowOnPlayerPageSet,
+    userPreferencesSet,
+} from '@/src/contentScript/component/actions';
 
 console.log('ContentScript is loaded');
 
@@ -37,3 +40,13 @@ window.onmessage = (event) => {
         }
     }
 };
+
+chrome.runtime.onMessage.addListener((message) => {
+    if (message.type === messageType.userPreferencesUpdated) {
+        store.dispatch(
+            userPreferencesSet(
+                (message as UserPreferencesUpdated).payload.userPreferences
+            )
+        );
+    }
+});

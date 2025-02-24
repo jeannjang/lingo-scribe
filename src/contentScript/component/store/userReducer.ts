@@ -31,13 +31,20 @@ const userReducer = createReducer(initialState, (builder) => {
         state.status = 'fail';
     });
     builder.addCase(userPreferencesSet, (state, action) => {
-        state.preferences = action.payload;
+        // Send a message to the service worker
+        // only when an actual state change is needed to prevent this infinite loop.
+        // Need JSON.stringify to compare two object data properly which stores in two different memories.
+        if (
+            JSON.stringify(state.preferences) !== JSON.stringify(action.payload)
+        ) {
+            state.preferences = action.payload;
 
-        // one-way notification to service worker
-        chrome.runtime.sendMessage<SetUserPreferences, void>({
-            type: 'USER_PREFERENCES/SET',
-            payload: { userPreferences: action.payload },
-        });
+            // one-way notification to service worker
+            chrome.runtime.sendMessage<SetUserPreferences, void>({
+                type: 'USER_PREFERENCES/SET',
+                payload: { userPreferences: action.payload },
+            });
+        }
     });
 });
 
