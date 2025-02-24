@@ -2,21 +2,21 @@ import React, { useEffect } from 'react';
 import { Subtitle } from '@/src/types/subtitle';
 import { VideoPauseMessage } from '@/src/types/messages';
 import useVideoCurrentTime from '@/src/contentScript/component/hooks/useVideoCurrentTime';
-import { DeckMode } from '@/src/contentScript/component/components/SubtitleDeck/index';
+import { DeckMode } from '@/src/types/userPreferences';
 
 interface IProps {
     subtitle?: Subtitle;
     isUserAnswerChecking: boolean;
-    deckMode: DeckMode;
     subType: 'study' | 'guide';
+    deckMode: DeckMode;
     isAutoPause: boolean;
 }
 
 const SubtitleBar: React.FC<IProps> = ({
     subtitle,
     isUserAnswerChecking,
-    deckMode,
     subType,
+    deckMode,
     isAutoPause,
 }) => {
     const currentTime = useVideoCurrentTime(100);
