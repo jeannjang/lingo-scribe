@@ -52,7 +52,7 @@ const parseXmlToSubtitles = (xmlSubtitleString: string): SubtitleLine[] => {
             })
             .filter(
                 (subtitleLine) =>
-                    subtitleLine.text.match(/[a-zA-Z0-9]/g) &&
+                    !subtitleLine.text.match(/^[- ]+$/g) &&
                     subtitleLine.text.length > 0
             )
             // Sometimes one subtitle line is broken into two pieces.
