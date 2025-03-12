@@ -43,6 +43,18 @@ window.onmessage = (event) => {
 
 chrome.runtime.onMessage.addListener((message) => {
     if (message.type === messageType.userPreferencesUpdated) {
+        // Reload the page if the user's language preferences have changed so that the page can be re-rendered with the new language.
+        if (
+            store.getState().user.preferences?.studyLanguage !==
+                (message as UserPreferencesUpdated).payload.userPreferences
+                    .studyLanguage ||
+            store.getState().user.preferences?.guideLanguage !==
+                (message as UserPreferencesUpdated).payload.userPreferences
+                    .guideLanguage
+        ) {
+            location.reload();
+        }
+
         store.dispatch(
             userPreferencesSet(
                 (message as UserPreferencesUpdated).payload.userPreferences
