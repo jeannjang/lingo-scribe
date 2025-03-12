@@ -50,7 +50,11 @@ const parseXmlToSubtitles = (xmlSubtitleString: string): SubtitleLine[] => {
                     text: sanitizedText,
                 };
             })
-            .filter((subtitleLine) => subtitleLine.text.length > 0)
+            .filter(
+                (subtitleLine) =>
+                    subtitleLine.text.match(/[a-zA-Z0-9]/g) &&
+                    subtitleLine.text.length > 0
+            )
             // Sometimes one subtitle line is broken into two pieces.
             .reduce((acc, currentLine, currentIndex) => {
                 if (currentIndex == 0) {
