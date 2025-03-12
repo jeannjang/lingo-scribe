@@ -6,7 +6,7 @@ import {
     SubtitleFetchError,
     SubtitleRequestMessage,
     SubtitleResponseMessage,
-    VideoSeekMsMessage
+    VideoSeekMsMessage,
 } from '../types/messages';
 import spyOnJsonParse from './spyOnJsonParse';
 import { getSubtitleDownloadUrls } from './subtitleDownloadUrlsStore';
@@ -30,15 +30,16 @@ interface NetflixVideoPlayer {
 
 const getNetflixVideoPlayer = (windowObject: Window & { netflix?: any }) => {
     try {
-        const playerAppApi =
-            windowObject.netflix.appContext.state.playerApp.getAPI();
+        const videoPlayer =
+            windowObject.netflix.appContext.state.playerApp.getAPI()
+                .videoPlayer;
         const playerSessionId =
-            playerAppApi.videoPlayer.getAllPlayerSessionIds()[0] as string;
+            videoPlayer.getAllPlayerSessionIds()[0] as string;
         // Check if the playerSessionId is a watch session.
         if (!playerSessionId.startsWith('watch')) {
             return undefined;
         }
-        return playerAppApi.videoPlayer.getVideoPlayerBySessionId(
+        return videoPlayer.getVideoPlayerBySessionId(
             playerSessionId
         ) as NetflixVideoPlayer;
     } catch (_) {
@@ -50,7 +51,9 @@ const getNetflixVideoPlayerAsync = async (
     windowObject: Window & { netflix?: any }
 ) => {
     await waitUntilAsync(
-        () => getNetflixVideoPlayer(windowObject) != undefined
+        () => getNetflixVideoPlayer(windowObject) !== undefined,
+        2500,
+        300000
     );
     return getNetflixVideoPlayer(windowObject) as NetflixVideoPlayer;
 };
@@ -74,22 +77,20 @@ const sendSubtitleFetchErrorMessage = (message: string) => {
 
 const addVideoControlMessageListener = (windowObject: Window) => {
     windowObject.addEventListener('message', async (event) => {
-        const netflixVideoPlayer =
-            await getNetflixVideoPlayerAsync(windowObject);
         switch (event.data.type) {
             case messageType.videoPause: {
-                netflixVideoPlayer.pause();
+                (await getNetflixVideoPlayerAsync(windowObject)).pause();
                 return;
             }
             case messageType.videoPlay: {
-                netflixVideoPlayer.play();
+                (await getNetflixVideoPlayerAsync(windowObject)).play();
                 return;
             }
             case messageType.videoSeekMs: {
                 const {
                     payload: { seekMs },
                 } = event.data as VideoSeekMsMessage;
-                netflixVideoPlayer.seek(seekMs);
+                (await getNetflixVideoPlayerAsync(windowObject)).seek(seekMs);
                 return;
             }
         }
@@ -127,9 +128,15 @@ const addSubtitleRequestMessageListener = (windowObject: Window) => {
                 );
 
                 try {
-                    await waitUntilAsync(() => {
-                        return getSubtitleDownloadUrls()[bcp47] !== undefined;
-                    });
+                    await waitUntilAsync(
+                        () => {
+                            return (
+                                getSubtitleDownloadUrls()[bcp47] !== undefined
+                            );
+                        },
+                        2500,
+                        300000
+                    );
 
                     // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 } catch (_) {
