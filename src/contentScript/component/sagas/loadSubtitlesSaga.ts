@@ -27,10 +27,6 @@ const initialSubtitlesSetupSaga = function* () {
             ),
         });
 
-        console.debug(
-            'Initial Subtitles Setup Saga - Available Languages Fetched'
-        );
-
         if (fetchAvailableLanguagesInBcp47Failed) {
             console.debug('Failed to fetch available languages');
             const failedAction =
@@ -40,6 +36,10 @@ const initialSubtitlesSetupSaga = function* () {
             console.error(failedAction.payload.message);
             return;
         }
+
+        console.debug(
+            'Initial Subtitles Setup Saga - Available Languages Fetched'
+        );
 
         // Check if user preferences are set
         const userState: UserSliceState = yield select(
@@ -92,14 +92,6 @@ const initialSubtitlesSetupSaga = function* () {
             'Initial Subtitles Setup Saga - studyLanguage:',
             studyLanguage
         );
-
-        // If study language is undefined, wait for user preferences to be set
-        if (!userState.preferences?.studyLanguage) {
-            const userPreferencesSetAction: ReturnType<
-                typeof actions.userPreferencesSet
-            > = yield take(actions.userPreferencesSet);
-            studyLanguage = userPreferencesSetAction.payload.studyLanguage;
-        }
 
         // If study language is still undefined, return
         if (!studyLanguage) {

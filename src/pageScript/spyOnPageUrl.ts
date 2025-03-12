@@ -8,9 +8,7 @@ export const determineIfWindowOnPlayerPage = (url: string | URL) =>
 
 const handleUrl = (url: string | URL | null | undefined) => {
     if (url) {
-        if (determineIfWindowOnPlayerPage(url)) {
-            resetSubtitleDownloadUrls();
-        }
+        resetSubtitleDownloadUrls();
 
         window.postMessage({
             type: 'APP/WINDOW_ON_PLAYER_PAGE',
