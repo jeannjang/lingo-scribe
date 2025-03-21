@@ -55,6 +55,9 @@
         @apply border-border;
     }
     #subtitle-extension-react-root {
+        @apply font-sans antialiased bg-background text-white;
+    }
+    #popup-controller {
         @apply font-sans antialiased bg-background text-foreground;
     }
 }
