@@ -54,7 +54,8 @@ const SubtitleBar: React.FC<IProps> = ({
         <>
             {currentSubtitleLines?.map((line) => (
                 <p
-                    className={`text-white text-base md:text-2xl ${
+                    className={`text-base font-medium ${subType === 'study' ? 'md:text-2xl lg:text-3xl' : 'md:text-xl lg:text-2xl'} 
+                    ${
                         deckMode === 'dictation' && !isUserAnswerChecking
                             ? 'opacity-0'
                             : 'opacity-100'

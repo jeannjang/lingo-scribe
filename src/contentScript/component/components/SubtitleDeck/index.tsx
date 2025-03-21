@@ -21,7 +21,7 @@ const SubtitleDeck = () => {
         <>
             <div
                 className={
-                    'absolute bottom-44 w-full flex flex-col items-center justify-center space-y-1.5 pointer-events-auto'
+                    'absolute bottom-44 w-full flex flex-col items-center justify-center space-y-2 pointer-events-auto'
                 }
             >
                 {subtitles.study && (
@@ -33,6 +33,7 @@ const SubtitleDeck = () => {
                         isAutoPause={preferences.isAutoPause}
                     />
                 )}
+
                 {subtitles.guide && (
                     <SubtitleBar
                         subtitle={subtitles.guide}
@@ -42,7 +43,6 @@ const SubtitleDeck = () => {
                         isAutoPause={preferences.isAutoPause}
                     />
                 )}
-
                 {preferences.deckMode === 'dictation' && (
                     //Control video playback based on the study subtitle timestamps.
                     <DictationTextInput

@@ -4,6 +4,7 @@ import { VideoPlayMessage, VideoSeekMsMessage } from '@/src/types/messages';
 import { Button } from '@/components/ui/button';
 import useVideoCurrentTime from '@/src/contentScript/component/hooks/useVideoCurrentTime';
 import { Subtitle, SubtitleLine } from '@/src/types/subtitle';
+import { ChevronLeft, ChevronRight, Repeat, Check } from 'lucide-react';
 
 type SeekLineType = 'previous' | 'next' | 'replay';
 
@@ -47,13 +48,6 @@ const DictationTextInput = ({ subtitle, setIsUserAnswerChecking }: IProps) => {
     const handleCheck = () => {
         setIsUserAnswerChecking(true);
         inputRef.current?.focus();
-    };
-
-    const handlePlay = () => {
-        window.postMessage(
-            { type: 'VIDEO/PLAY' } satisfies VideoPlayMessage,
-            '*'
-        );
     };
 
     const findSubtitleLine = (
@@ -135,14 +129,7 @@ const DictationTextInput = ({ subtitle, setIsUserAnswerChecking }: IProps) => {
     };
 
     return (
-        <div className="w-full max-w-3xl flex items-center gap-2 px-4">
-            <Button
-                variant="outline"
-                onClick={handleSeek('previous')}
-                className="w-[40px]"
-            >
-                Prev
-            </Button>
+        <div className="w-full max-w-2xl flex flex-col items-center gap-1 px-4">
             <Input
                 onBlur={(e) => {
                     // Netflix player will steal focus when they hide the video controller panel
@@ -157,33 +144,45 @@ const DictationTextInput = ({ subtitle, setIsUserAnswerChecking }: IProps) => {
                 autoFocus={true}
                 value={inputValue}
                 onChange={onHandleChange}
-                placeholder="Type the subtitle here..."
-                className="text-white md:text-lg h-10"
+                placeholder="Type what you hear..."
+                className="md:text-xl lg:text-2xl font-medium text-center
+                border-white/70 border-0 border-b-2 rounded-none shadow-none focus:!ring-0 focus:!border-b-2 px-1 mt-1
+                placeholder:text-white/40 placeholder:font-light"
             />
-            <Button
-                variant="outline"
-                onClick={handleSeek('next')}
-                className="w-[40px]"
-            >
-                Next
-            </Button>
-            <Button
-                variant="outline"
-                onClick={handleSeek('replay')}
-                className="w-[40px]"
-            >
-                Replay
-            </Button>
-            <Button
-                variant="outline"
-                onClick={handleCheck}
-                className="w-[40px]"
-            >
-                Check
-            </Button>
-            <Button variant="outline" onClick={handlePlay} className="w-[40px]">
-                Play
-            </Button>
+            <div className="w-full flex items-center justify-center gap-5 mt-1">
+                <Button
+                    variant="ghost"
+                    onClick={handleSeek('previous')}
+                    size={'icon'}
+                    className="hover:bg-transparent [&_svg]:size-5"
+                >
+                    <ChevronLeft />
+                </Button>
+                <Button
+                    variant="ghost"
+                    onClick={handleSeek('replay')}
+                    size="icon"
+                    className="p-0 hover:bg-transparent [&_svg]:size-5"
+                >
+                    <Repeat />
+                </Button>
+                <Button
+                    variant="ghost"
+                    onClick={handleCheck}
+                    size="icon"
+                    className="p-0 hover:bg-transparent [&_svg]:size-5"
+                >
+                    <Check />
+                </Button>
+                <Button
+                    variant="ghost"
+                    onClick={handleSeek('next')}
+                    size="icon"
+                    className="p-0 hover:bg-transparent [&_svg]:size-5"
+                >
+                    <ChevronRight />
+                </Button>
+            </div>
         </div>
     );
 };
