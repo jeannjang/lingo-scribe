@@ -18,8 +18,8 @@
             "matches": ["https://*.netflix.com/*"]
         }
     ],
-    "description": "This extension will help you to dictate subtitle of videos from Netflix",
+    "description": "Dictation meets dual subtitles — turn your Netflix time into a powerful language learning session. Enjoy!",
     "manifest_version": 3,
-    "name": "Subtitle Dictation App",
+    "name": "Lingo Scribe: Netflix Dictation & Dual Sub",
     "version": "1.0"
 }
