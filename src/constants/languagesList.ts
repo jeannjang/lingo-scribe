@@ -3,16 +3,13 @@ export const BCP47_LANGUAGES: language[] = [
     // Major Languages
     { bcp47: 'en', displayName: 'English' },
     // Spanish variants
-    { bcp47: 'es', displayName: 'Spanish (Latin America)' },
-    { bcp47: 'es-ES', displayName: 'Spanish (Spain)' },
-
+    { bcp47: 'es', displayName: 'Spanish' },
     // French
     { bcp47: 'fr', displayName: 'French' },
     { bcp47: 'de', displayName: 'German' },
     { bcp47: 'it', displayName: 'Italian' },
     // Portuguese variants
     { bcp47: 'pt', displayName: 'Portuguese' },
-    { bcp47: 'pt-BR', displayName: 'Portuguese (Brazil)' },
     { bcp47: 'ru', displayName: 'Russian' },
     { bcp47: 'ja', displayName: 'Japanese' },
     { bcp47: 'ko', displayName: 'Korean' },

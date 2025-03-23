@@ -91,7 +91,7 @@ const PopupCard: React.FC<IProps> = ({ userPreferences }) => {
 
             {/* B: Set Mode Tabs*/}
             <div>
-                <h2 className={'text-lg font-semibold mb-2'}>Set Mode</h2>
+                <h2 className={'text-lg font-semibold mb-2'}>Mode</h2>
                 <Tabs
                     value={userPreferences.deckMode}
                     onValueChange={(newDeckModeValue) =>
